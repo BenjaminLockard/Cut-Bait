@@ -3,6 +3,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MatchManager : MonoBehaviour
 {
@@ -10,6 +12,9 @@ public class MatchManager : MonoBehaviour
     public string guideSelected;
     public List<string> emailFeaturesSelected;
 
+
+    private LineRenderer lineRenderer;
+    private Image emailPos, guidePos;
 
     public void makeMatch()
     {
@@ -33,15 +38,55 @@ public class MatchManager : MonoBehaviour
         }
     }
     
+    public void updateEmailPos (Image ePos)
+    {
+        emailPos = ePos;
+    }
+    public void updateGuidePos(Image gPos)
+    {
+        guidePos = gPos;
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.positionCount = 2;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        // Update positions every frame
+        if (guidePos == null && emailPos == null)
+        {
+            lineRenderer.enabled = false;
+        } else 
+        {
+            lineRenderer.enabled = true;
+            if (guidePos != null && emailPos != null)
+            {
+                lineRenderer.SetPosition(0, emailPos.transform.position);
+                lineRenderer.SetPosition(1, guidePos.transform.position);
+            }
+            else
+            {
+                Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mouseWorldPos.z = 5.0f;
+
+                if (guidePos != null)
+                {
+                    lineRenderer.SetPosition(0, mouseWorldPos);
+                    lineRenderer.SetPosition(1, guidePos.transform.position);
+                }
+                else if (emailPos != null)
+                {
+                    lineRenderer.SetPosition(0, emailPos.transform.position);
+                    lineRenderer.SetPosition(1, mouseWorldPos);
+                }
+            }
+        }
+
     }
 }

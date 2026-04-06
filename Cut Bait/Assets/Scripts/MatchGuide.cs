@@ -16,6 +16,7 @@ public class MatchGuide : MonoBehaviour, IPointerClickHandler
         {
             thisPanelImage.color = new Color(1f, 0.9568627f, 1f, 1f);
             matchManager.guideSelected = null;
+            matchManager.updateGuidePos(null);
         }
         else
         {
@@ -32,6 +33,7 @@ public class MatchGuide : MonoBehaviour, IPointerClickHandler
             Debug.Log(guideFeature);
 
             matchManager.makeMatch();
+            matchManager.updateGuidePos(thisPanelImage);
         }
 
         //normal: 255, 244, 255, 255
