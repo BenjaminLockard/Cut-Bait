@@ -17,6 +17,7 @@ public class MatchGuide : MonoBehaviour, IPointerClickHandler
             thisPanelImage.color = new Color(1f, 0.9568627f, 1f, 1f);
             matchManager.guideSelected = null;
             matchManager.updateGuidePos(null);
+            matchManager.stopMakeMatch();
         }
         else
         {

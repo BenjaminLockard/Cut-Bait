@@ -23,11 +23,19 @@ public class DisplayBar : MonoBehaviour
         matchLoadRoutine = StartCoroutine(matchLoad());
     }
 
+    public void stopMatchLoad()
+    {
+        StopCoroutine(matchLoadRoutine);
+        slider.value = 0;
+        fill.color = gradient.Evaluate(slider.normalizedValue);
+        textbox.text = "Awaiting Comparison...";
+    }
+
     public IEnumerator matchLoad()
     {
         slider.value = 0;
         fill.color = gradient.Evaluate(slider.normalizedValue);
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < slider.maxValue; i++) {
             textbox.text = "Comparing...";
             yield return new WaitForSeconds(0.04f);
             slider.value++;

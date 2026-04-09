@@ -17,6 +17,7 @@ public class MatchEmail : MonoBehaviour, IPointerClickHandler
             thisPanelImage.color = new Color(1f, 1f, 1f, 1f);
             matchManager.emailFeaturesSelected = null;
             matchManager.updateEmailPos(null);
+            matchManager.stopMakeMatch();
         }
         else
         {
