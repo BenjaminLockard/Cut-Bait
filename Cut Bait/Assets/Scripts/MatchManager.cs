@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 public class MatchManager : MonoBehaviour
 {
+    public MoneyManager moneyManager;
+    public DisplayBar progressBar;
+    
     private float confirmationScore;
     public string guideSelected;
     public List<string> emailFeaturesSelected;
@@ -16,10 +19,26 @@ public class MatchManager : MonoBehaviour
     private LineRenderer lineRenderer;
     private Image emailPos, guidePos;
 
-    public void makeMatch()
+    private Coroutine makeMatchRoutine;
+
+    public void startMakeMatch()
     {
+        if (makeMatchRoutine != null)
+        {
+            StopCoroutine(makeMatchRoutine);
+        }
+
+        makeMatchRoutine = StartCoroutine(makeMatch());
+    }
+
+    public IEnumerator makeMatch()
+    {
+
         if (guideSelected != null && emailFeaturesSelected != null)
         {
+            progressBar.startMatchLoad();
+            yield return new WaitForSeconds(1.6f);
+
             foreach (string feature in emailFeaturesSelected)
             {
                 if (feature == guideSelected)
@@ -35,6 +54,9 @@ public class MatchManager : MonoBehaviour
 
                 }
             }
+
+            makeMatchRoutine = null;
+
         }
     }
     
@@ -53,6 +75,9 @@ public class MatchManager : MonoBehaviour
     {
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
+
+        guideSelected = null;
+        emailFeaturesSelected = null;
     }
 
     // Update is called once per frame
@@ -79,6 +104,7 @@ public class MatchManager : MonoBehaviour
                 {
                     lineRenderer.SetPosition(0, mouseWorldPos);
                     lineRenderer.SetPosition(1, guidePos.transform.position);
+                    //Debug.Log(guidePos.transform.position);
                 }
                 else if (emailPos != null)
                 {
