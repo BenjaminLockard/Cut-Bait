@@ -35,18 +35,24 @@ public class DisplayBar : MonoBehaviour
     {
         slider.value = 0;
         fill.color = gradient.Evaluate(slider.normalizedValue);
+        textbox.text = "Comparing...";
         for (int i = 0; i < slider.maxValue; i++) {
-            textbox.text = "Comparing...";
-            yield return new WaitForSeconds(0.04f);
+            yield return new WaitForSeconds(0.02f);
             slider.value++;
             fill.color = gradient.Evaluate(slider.normalizedValue);
         }
 
         textbox.text = "Comparison Complete!";
         yield return new WaitForSeconds(1.5f);
-        slider.value = 0;
         fill.color = gradient.Evaluate(slider.normalizedValue);
         textbox.text = "Awaiting Comparison...";
+
+        for (int i = 0; i < (slider.maxValue); i++)
+        {
+            yield return new WaitForSeconds(0.005f);
+            slider.value--;
+            fill.color = gradient.Evaluate(slider.normalizedValue);
+        }
 
         matchLoadRoutine = null;
     }

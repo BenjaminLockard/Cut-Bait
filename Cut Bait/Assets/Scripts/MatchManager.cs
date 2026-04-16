@@ -16,7 +16,7 @@ public class MatchManager : MonoBehaviour
     public string guideSelected;
     public List<string> emailFeaturesSelected;
     public List<string> emailFeaturesFound;
-
+    
     private LineRenderer lineRenderer;
     private Image emailPos, guidePos;
 
@@ -86,11 +86,17 @@ public class MatchManager : MonoBehaviour
             }
 
             if (repeatMatch)
-                CFB += "repeat risk\n >>> o <<< \n";
+                CFB += "repeat risk\n >>> O <<< \n";
             else if (foundMatch)
-                CFB += "risk identified\n >>> o <<< \n";
+            {
+                CFB += "risk identified\n >>> O <<< \n";
+                StartCoroutine(moneyManager.updateMoney(5));
+            }
             else
-                CFB += "no correlation\n >>> o <<< \n";
+            {
+                CFB += "no correlation\n >>> X <<< \n";
+                StartCoroutine(moneyManager.updateMoney(-1));
+            }
 
             if (matchPoints >= 2)
                 CFB += "scam confirmed";
@@ -132,9 +138,9 @@ public class MatchManager : MonoBehaviour
         for (int i = 0; i < 2; i++)
         {
             panel.SetActive(false);
-            yield return new WaitForSeconds(0.03f);
+            yield return new WaitForSeconds(0.04f);
             panel.SetActive(true);
-            yield return new WaitForSeconds(0.09f);
+            yield return new WaitForSeconds(0.08f);
         }
     }
 
