@@ -10,30 +10,36 @@ public class MatchGuide : MonoBehaviour, IPointerClickHandler
     public MatchManager matchManager;
     public Image thisPanelImage;
 
+    public LineRenderer lineRenderer;
+    public Image emailImageForLine;
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (matchManager.guideSelected == guideFeature)
+        if (!matchManager.showingFeedback)
         {
-            thisPanelImage.color = new Color(1f, 0.9568627f, 1f, 1f);
-            matchManager.guideSelected = null;
-            matchManager.updateGuidePos(null);
-            matchManager.stopMakeMatch();
-        }
-        else
-        {
-
-            MatchGuide[] allGuides = Object.FindObjectsByType<MatchGuide>(FindObjectsSortMode.None);
-
-            foreach (MatchGuide guide in allGuides)
+            if (matchManager.guideSelected == guideFeature)
             {
-                guide.thisPanelImage.color = new Color(1f, 0.9568627f, 1f, 1f);
+                thisPanelImage.color = new Color(1f, 0.9568627f, 1f, 1f);
+                matchManager.guideSelected = null;
+                matchManager.updateGuidePos(null);
+                matchManager.stopMakeMatch();
+             }
+            else
+            {
+
+                MatchGuide[] allGuides = Object.FindObjectsByType<MatchGuide>(FindObjectsSortMode.None);
+
+                foreach (MatchGuide guide in allGuides)
+                {
+                    guide.thisPanelImage.color = new Color(1f, 0.9568627f, 1f, 1f);
+                }
+
+                 matchManager.guideSelected = guideFeature;
+                thisPanelImage.color = new Color(1f, 0.9f, 0.4f, 1f);
+
+                matchManager.startMakeMatch();
+                matchManager.updateGuidePos(thisPanelImage);
             }
-
-            matchManager.guideSelected = guideFeature;
-            thisPanelImage.color = new Color(1f, 0.9f, 0.4f, 1f);
-
-            matchManager.startMakeMatch();
-            matchManager.updateGuidePos(thisPanelImage);
         }
 
         //normal: 255, 244, 255, 255
@@ -54,12 +60,20 @@ public class MatchGuide : MonoBehaviour, IPointerClickHandler
     // Start is called before the first frame update
     void Start()
     {
-        
+        emailImageForLine = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (matchManager.showingFeedback && emailImageForLine != null)
+        {
+            lineRenderer.enabled = true;
+            lineRenderer.SetPosition(0, emailImageForLine.transform.position);
+            lineRenderer.SetPosition(1, thisPanelImage.transform.position);
+        } else
+        {
+            lineRenderer.enabled = false;
+        }
     }
 }

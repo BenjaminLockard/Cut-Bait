@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class SubmitButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    public FeedManager feedManager;
+    public MatchManager matchManager;
+
     public Slider slider;
     public Gradient gradient;
     public Image fill;
@@ -16,7 +19,8 @@ public class SubmitButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        sendCoroutine = StartCoroutine(HoldTimer());
+        if (!feedManager.inFeed && !matchManager.showingFeedback)
+            sendCoroutine = StartCoroutine(HoldTimer());
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -39,19 +43,8 @@ public class SubmitButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             slider.value++;
             fill.color = gradient.Evaluate(slider.normalizedValue);
         }
-        
-    }
 
-    public void activate()
-    {
-        if (isLegit)
-        {
-
-        }
-        else
-        {
-
-        }
+        matchManager.sendAndScore(isLegit);
     }
 
     void Start()

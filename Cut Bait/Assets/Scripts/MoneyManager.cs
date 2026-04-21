@@ -12,7 +12,6 @@ public class MoneyManager : MonoBehaviour
 
     public IEnumerator updateMoney(int amount)
     {
-        Debug.Log("ok");
         money += amount;
         moneyText.text = money.ToString();
 

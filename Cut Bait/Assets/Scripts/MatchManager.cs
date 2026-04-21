@@ -9,6 +9,8 @@ using TMPro;
 
 public class MatchManager : MonoBehaviour
 {
+    public bool constructiveFeedback, showingFeedback;
+    
     public MoneyManager moneyManager;
     public DisplayBar progressBar;
     
@@ -16,18 +18,23 @@ public class MatchManager : MonoBehaviour
     public string guideSelected;
     public List<string> emailFeaturesSelected;
     public List<string> emailFeaturesFound;
+    public bool currentIsLegit;
     
     private LineRenderer lineRenderer;
     private Image emailPos, guidePos;
 
     public Coroutine makeMatchRoutine;
+    public DisplayBar displayBar;
 
-    public GameObject CFBPanel;
-    public TMP_Text CFBText;
+    public GameObject CFBPanel, SFBPanel;
+    public TMP_Text CFBText, SFBText;
 
     private string CFB;
-    private int matchPoints;
+    public int matchPoints;
 
+    public List<MatchEmail> activeSegments;
+
+    public FeedManager feedManager;
 
     // Match Processing -----------------------------------------------------------
 
@@ -44,6 +51,7 @@ public class MatchManager : MonoBehaviour
     public void stopMakeMatch()
     {
         progressBar.stopMatchLoad();
+
         if (makeMatchRoutine != null)
             StopCoroutine(makeMatchRoutine);
     }
@@ -86,15 +94,20 @@ public class MatchManager : MonoBehaviour
             }
 
             if (repeatMatch)
-                CFB += "repeat risk\n >>> O <<< \n";
+            {
+                CFB += "repeat risk\n >>> - <<< \n";
+                CFBText.color = new Color(1f, 1f, 0.25f, 1f);
+            }
             else if (foundMatch)
             {
                 CFB += "risk identified\n >>> O <<< \n";
+                CFBText.color = new Color(0.5f, 1f, 0.25f, 1f);
                 StartCoroutine(moneyManager.updateMoney(5));
             }
             else
             {
                 CFB += "no correlation\n >>> X <<< \n";
+                CFBText.color = new Color(1f, 0.25f, 0.25f, 1f);
                 StartCoroutine(moneyManager.updateMoney(-1));
             }
 
@@ -106,7 +119,7 @@ public class MatchManager : MonoBehaviour
                 CFB += "no suspicion";
 
             CFBPanel.SetActive(true);
-            StartCoroutine(Type(CFBPanel, CFBText, CFB, 0.01f));
+            StartCoroutine(Type(CFBPanel, CFBText, CFB, 0.0075f));
 
 
             CFB = "";
@@ -134,20 +147,59 @@ public class MatchManager : MonoBehaviour
             dest.text += letter;
             yield return new WaitForSeconds(typeSpeed);
         }
+    }
 
-        for (int i = 0; i < 2; i++)
+    // Submission & Feed Prep --------------------------------------------------------
+
+    public void sendAndScore(bool sentLegit)
+    {
+        moneyManager.updateScore(sentLegit == currentIsLegit);
+        matchPoints = 0;
+        //emailFeaturesFound = null;
+
+        if (constructiveFeedback)
         {
-            panel.SetActive(false);
-            yield return new WaitForSeconds(0.04f);
-            panel.SetActive(true);
-            yield return new WaitForSeconds(0.08f);
+            feedManager.clickMeIndicator.SetActive(true);
+
+            CFBPanel.SetActive(false);
+            emailFeaturesSelected = null;
+            updateEmailPos(null);
+            guideSelected = null;
+            updateGuidePos(null);
+
+            showingFeedback = true;
+
+            MatchGuide[] allGuides = Object.FindObjectsByType<MatchGuide>(FindObjectsSortMode.None);
+
+            foreach (MatchEmail segment in activeSegments)
+            {
+                if (segment.thisPanelImage.color != new Color(0.8f, 0.9f, 1f, 1f))
+                    segment.thisPanelImage.color = new Color(1f, 1f, 1f, 1f);
+
+                foreach (MatchGuide guide in allGuides)
+                {
+                    if (guide.thisPanelImage.color != new Color(0.85f, 0.65f, 1f, 1f))
+                        guide.thisPanelImage.color = new Color(1f, 0.9568627f, 1f, 1f);
+
+                    foreach (string feature in segment.emailFeatures)
+                    {
+                        if (feature == guide.guideFeature)
+                        {
+                            guide.emailImageForLine = segment.thisPanelImage;
+                            segment.thisPanelImage.color = new Color(0.8f, 0.9f, 1f, 1f);
+                            guide.thisPanelImage.color = new Color(0.85f, 0.65f, 1f, 1f);
+                        }
+                    }
+                }
+            }
+
+        } else
+        {
+            feedManager.returnToFeed();
         }
     }
 
-    // Feed Prep --------------------------------------------------------
-
-
-    // Start is called before the first frame update
+    // ----------------------------------------------------------------------------------
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -155,6 +207,8 @@ public class MatchManager : MonoBehaviour
 
         guideSelected = null;
         emailFeaturesSelected = null;
+
+        showingFeedback = false;
 
         CFB = "";
         matchPoints = 0;
@@ -192,6 +246,10 @@ public class MatchManager : MonoBehaviour
                 }
             }
         }
+
+
+
+
 
     }
 }
