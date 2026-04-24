@@ -29,7 +29,7 @@ public class MatchManager : MonoBehaviour
     public GameObject CFBPanel, SFBPanel;
     public TMP_Text CFBText, SFBText;
 
-    private string CFB;
+    private string CFB, SFB;
     public int matchPoints;
 
     public List<MatchEmail> activeSegments;
@@ -193,6 +193,30 @@ public class MatchManager : MonoBehaviour
                 }
             }
 
+            SFB = "";
+            if (currentIsLegit)
+            {
+                SFB += "email was legitimate\n > > > ";
+            }
+            else
+            {
+                SFB += "email was a scam\n > > > ";
+            } 
+
+            if (currentIsLegit == sentLegit)
+            {
+                SFB += "O < < < \nrisk factors shown";
+                SFBText.color = new Color(0.5f, 1f, 0.25f, 1f);
+            }
+            else
+            {
+                SFB += "X < < < \nrisk factors shown";
+                SFBText.color = new Color(1f, 0.25f, 0.25f, 1f);
+            }
+
+            SFBPanel.SetActive(true);
+            StartCoroutine(Type(SFBPanel, SFBText, SFB, 0.005f));
+
         } else
         {
             feedManager.returnToFeed();
@@ -211,6 +235,7 @@ public class MatchManager : MonoBehaviour
         showingFeedback = false;
 
         CFB = "";
+        SFB = "";
         matchPoints = 0;
     }
 

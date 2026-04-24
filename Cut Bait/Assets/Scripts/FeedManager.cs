@@ -54,6 +54,7 @@ public class FeedManager : MonoBehaviour
             matchManager.showingFeedback = false;
 
             matchManager.CFBPanel.SetActive(false);
+            matchManager.SFBPanel.SetActive(false);
             matchManager.emailFeaturesSelected = null;
             matchManager.updateEmailPos(null);
             matchManager.guideSelected = null;
