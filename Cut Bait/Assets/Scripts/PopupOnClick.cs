@@ -10,4 +10,9 @@ public class PopupOnClick : MonoBehaviour
     {
         popup.SetActive(true);
     }
+
+    public void hidePopup()
+    {
+        popup.SetActive(false);
+    }
 }

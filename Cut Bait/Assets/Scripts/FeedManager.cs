@@ -9,23 +9,33 @@ public class FeedManager : MonoBehaviour
 {
     public MatchManager matchManager;
     public DisplayBar displayBar;
-    
-    public List<GameObject> fullFeed;
+
     public List<GameObject> currentFeed;
+    public List<GameObject> day1Feed;
+    public List<GameObject> day2Feed;
+    public List<GameObject> day3Feed;
+    public List<GameObject> day4Feed;
 
     public TMP_Text titleText;
     public bool inFeed;
 
     public GameObject clickMeIndicator;
+    public Image clickMeImage;
 
     public FeedEmail currentEmail;
+
+    public void dropCurrentFromList()
+    {
+        currentFeed.Remove(currentEmail.thisPanel);
+    }
 
     public void returnToFeed()
     {
         if (!inFeed)
         {
             clickMeIndicator.SetActive(false);
-            
+            clickMeImage.color = new Color(0.8392158f, 0.8392158f, 0.8392158f, 1f);
+
             MatchEmail[] displayedSegments = Object.FindObjectsByType<MatchEmail>(FindObjectsSortMode.None);
             MatchGuide[] allGuides = Object.FindObjectsByType<MatchGuide>(FindObjectsSortMode.None);
 

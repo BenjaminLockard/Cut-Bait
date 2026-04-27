@@ -95,7 +95,7 @@ public class MatchManager : MonoBehaviour
 
             if (repeatMatch)
             {
-                CFB += "repeat risk\n >>> - <<< \n";
+                CFB += "risk already found\n >>> - <<< \n";
                 CFBText.color = new Color(1f, 1f, 0.25f, 1f);
             }
             else if (foundMatch)
@@ -114,7 +114,7 @@ public class MatchManager : MonoBehaviour
             if (matchPoints >= 2)
                 CFB += "scam confirmed";
             else if (matchPoints >= 1)
-                CFB += "scam suspected";
+                CFB += "scam possible";
             else
                 CFB += "no suspicion";
 
@@ -155,30 +155,33 @@ public class MatchManager : MonoBehaviour
     {
         moneyManager.updateScore(sentLegit == currentIsLegit);
         matchPoints = 0;
-        //emailFeaturesFound = null;
+        emailFeaturesFound.Clear();
+        feedManager.clickMeIndicator.SetActive(true);
+        feedManager.clickMeImage.color = new Color(1f, 0.9f, 0.4f, 1f);
+        CFBPanel.SetActive(false);
+
+        showingFeedback = true;
+
+        emailFeaturesSelected = null;
+        updateEmailPos(null);
+        guideSelected = null;
+        updateGuidePos(null);
+
+        feedManager.dropCurrentFromList();
 
         if (constructiveFeedback)
         {
-            feedManager.clickMeIndicator.SetActive(true);
-
-            CFBPanel.SetActive(false);
-            emailFeaturesSelected = null;
-            updateEmailPos(null);
-            guideSelected = null;
-            updateGuidePos(null);
-
-            showingFeedback = true;
 
             MatchGuide[] allGuides = Object.FindObjectsByType<MatchGuide>(FindObjectsSortMode.None);
 
             foreach (MatchEmail segment in activeSegments)
             {
-                if (segment.thisPanelImage.color != new Color(0.8f, 0.9f, 1f, 1f))
+                if (segment.thisPanelImage.color != new Color(1f, 0.8f, 0.8f, 1f))
                     segment.thisPanelImage.color = new Color(1f, 1f, 1f, 1f);
 
                 foreach (MatchGuide guide in allGuides)
                 {
-                    if (guide.thisPanelImage.color != new Color(0.85f, 0.65f, 1f, 1f))
+                    if (guide.thisPanelImage.color != new Color(1f, 0.8f, 0.8f, 1f))
                         guide.thisPanelImage.color = new Color(1f, 0.9568627f, 1f, 1f);
 
                     foreach (string feature in segment.emailFeatures)
@@ -186,8 +189,8 @@ public class MatchManager : MonoBehaviour
                         if (feature == guide.guideFeature)
                         {
                             guide.emailImageForLine = segment.thisPanelImage;
-                            segment.thisPanelImage.color = new Color(0.8f, 0.9f, 1f, 1f);
-                            guide.thisPanelImage.color = new Color(0.85f, 0.65f, 1f, 1f);
+                            segment.thisPanelImage.color = new Color(1f, 0.8f, 0.8f, 1f);
+                            guide.thisPanelImage.color = new Color(1f, 0.8f, 0.8f, 1f);
                         }
                     }
                 }
@@ -196,30 +199,52 @@ public class MatchManager : MonoBehaviour
             SFB = "";
             if (currentIsLegit)
             {
-                SFB += "email was legitimate\n > > > ";
+                SFB += "email was legitimate\n >>> ";
             }
             else
             {
-                SFB += "email was a scam\n > > > ";
+                SFB += "email was a scam\n >>>  ";
             } 
 
             if (currentIsLegit == sentLegit)
             {
-                SFB += "O < < < \nrisk factors shown";
+                SFB += "O  <<< \nrisk factors shown";
                 SFBText.color = new Color(0.5f, 1f, 0.25f, 1f);
             }
             else
             {
-                SFB += "X < < < \nrisk factors shown";
+                SFB += "X  <<< \nrisk factors shown";
                 SFBText.color = new Color(1f, 0.25f, 0.25f, 1f);
             }
 
             SFBPanel.SetActive(true);
-            StartCoroutine(Type(SFBPanel, SFBText, SFB, 0.005f));
+            StartCoroutine(Type(SFBPanel, SFBText, SFB, 0.0075f));
 
         } else
         {
-            feedManager.returnToFeed();
+            SFB = "";
+            if (currentIsLegit)
+            {
+                SFB += "email was legitimate\n >>> ";
+            }
+            else
+            {
+                SFB += "email was a scam\n >>>  ";
+            }
+
+            if (currentIsLegit == sentLegit)
+            {
+                SFB += "O  <<< \nreturn to inbox";
+                SFBText.color = new Color(0.5f, 1f, 0.25f, 1f);
+            }
+            else
+            {
+                SFB += "X  <<< \nreturn to inbox";
+                SFBText.color = new Color(1f, 0.25f, 0.25f, 1f);
+            }
+
+            SFBPanel.SetActive(true);
+            StartCoroutine(Type(SFBPanel, SFBText, SFB, 0.0075f));
         }
     }
 

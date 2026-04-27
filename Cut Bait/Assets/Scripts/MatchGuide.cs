@@ -13,6 +13,8 @@ public class MatchGuide : MonoBehaviour, IPointerClickHandler
     public LineRenderer lineRenderer;
     public Image emailImageForLine;
 
+    public int dayShown;
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!matchManager.showingFeedback)
