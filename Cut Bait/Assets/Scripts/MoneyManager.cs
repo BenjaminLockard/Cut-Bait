@@ -40,7 +40,7 @@ public class MoneyManager : MonoBehaviour
         {
             correct++;
             correctText.text = correct.ToString();
-            StartCoroutine(updateMoney(25));
+            StartCoroutine(updateMoney(20));
         } else
         {
             incorrect++;
