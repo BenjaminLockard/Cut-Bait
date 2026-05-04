@@ -8,6 +8,7 @@ using TMPro;
 public class FeedManager : MonoBehaviour
 {
     public MatchManager matchManager;
+    public TimeManager timeManager;
     public DisplayBar displayBar;
 
     public List<GameObject> currentFeed;
@@ -18,6 +19,7 @@ public class FeedManager : MonoBehaviour
 
     public TMP_Text titleText;
     public bool inFeed;
+    public bool dayStarted;
 
     public GameObject clickMeIndicator;
     public Image clickMeImage;
@@ -33,6 +35,11 @@ public class FeedManager : MonoBehaviour
     {
         if (!inFeed)
         {
+            if (!dayStarted)
+            {
+                timeManager.startTime();
+            }
+
             clickMeIndicator.SetActive(false);
             clickMeImage.color = new Color(0.8392158f, 0.8392158f, 0.8392158f, 1f);
 

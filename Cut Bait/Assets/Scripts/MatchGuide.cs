@@ -9,6 +9,7 @@ public class MatchGuide : MonoBehaviour, IPointerClickHandler
     public string guideFeature;
     public MatchManager matchManager;
     public Image thisPanelImage;
+    public GameObject thisPanel;
 
     public LineRenderer lineRenderer;
     public Image emailImageForLine;
@@ -63,6 +64,7 @@ public class MatchGuide : MonoBehaviour, IPointerClickHandler
     void Start()
     {
         emailImageForLine = null;
+        thisPanel.SetActive(false);
     }
 
     // Update is called once per frame

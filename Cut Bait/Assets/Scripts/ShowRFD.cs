@@ -6,8 +6,10 @@ using UnityEngine.EventSystems;
 public class ShowRFD : MonoBehaviour, IPointerClickHandler
 {
     public GameObject RFD;
+    public TimeManager timeManager;
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        RFD.SetActive(true);
+        timeManager.showGuidesToday();
     }
 }

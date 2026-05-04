@@ -30,6 +30,7 @@ public class MatchManager : MonoBehaviour
     public TMP_Text CFBText, SFBText;
 
     private string CFB, SFB;
+    public Image CFBPend, CFBConf;
     public int matchPoints;
 
     public List<MatchEmail> activeSegments;
@@ -111,12 +112,24 @@ public class MatchManager : MonoBehaviour
                 StartCoroutine(moneyManager.updateMoney(-1));
             }
 
+            CFBPend.enabled = false;
+            CFBConf.enabled = false;
+
             if (matchPoints >= 2)
+            {
                 CFB += "scam confirmed";
+                CFBConf.enabled = true;
+            }
             else if (matchPoints >= 1)
+            {
                 CFB += "scam possible";
+                CFBPend.enabled = true;
+            }
             else
+            {
                 CFB += "no suspicion";
+                CFBPend.enabled = true;
+            }
 
             CFBPanel.SetActive(true);
             StartCoroutine(Type(CFBPanel, CFBText, CFB, 0.0075f));
